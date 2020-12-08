@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+    http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+    version="2.0">
+
+	<persistence-unit name="locadora">
+	
+		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+		
+		
+		<!-- Entidade a ser mapeada / usar annotations @Entity
+		<class>bean.Filme</class>  -->
+		
+		<properties>
+		
+			<!-- SEM as propriedades URL, login, senha e driver ja se encontram no spring xml -->
+			
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
+			<property name="hibernate.show_sql" value="true" />			<!-- Mostra os codigos SQL executados pelo JPA -->
+			<property name="hibernate.format_sql" value="true" />		<!--  -->
+			<property name="hibernate.hbm2ddl.auto" value="update" />   <!-- Auto Gerencia as Tabelas, pode criar se não tiver -->   
+		</properties>
+	</persistence-unit>
+
+</persistence>

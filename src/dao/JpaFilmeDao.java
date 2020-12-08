@@ -3,41 +3,79 @@ package dao;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.sql.DataSource;
 import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-
-
 import bean.Filme;
 
-
-
 @Repository
-public class JdbcFilmeDao{
-	
-	private String tabela;
-	private JdbcGeneroDao generoDao;
-	private JdbcCategoriaDao categoriaDao;
-	private Connection connection;
-	
-	
+public class JpaFilmeDao implements FilmeDao {
+
+	@PersistenceContext
+    private EntityManager manager;
 	
 	@Autowired
-	public JdbcFilmeDao(DataSource dataSource, JdbcGeneroDao generoDao, JdbcCategoriaDao categoriaDao){
-		
-		try {
-			this.connection = dataSource.getConnection();
-			this.generoDao = generoDao;
-			this.categoriaDao = categoriaDao;
-			
-		} catch (Exception ex) {
-			System.err.println("Erro ao instanciar FilmeDao " + ex.getMessage());
-		}
-		this.tabela = "filme";
+	private JpaGeneroDao generoDao;
+	
+	@Autowired
+	private JpaCategoriaDao categoriaDao;
+
+	/*
+	@Autowired
+	public JpaFilmeDao(JdbcGeneroDao generoDao, JdbcCategoriaDao categoriaDao){
+		this.generoDao = generoDao;
+		this.categoriaDao = categoriaDao;
+
+	}*/
+	
+	
+	
+	public void insert(Filme filme) {
+		manager.persist(filme);
 	}
+	
+	public void update(Filme filme) {
+	    manager.merge(filme);
+	}
+	
+	public List<Filme> selectAll() {
+	    return manager.createQuery("select filme from Filme filme").getResultList();
+	}
+	
+	public Filme select(Integer id) {
+	   return manager.find(Filme.class, id);
+	}
+	
+	public void delete(Filme filme) {
+		Filme filmeARemover = select(filme.getId());
+	    manager.remove(filmeARemover);
+	}
+	
+	  
+	public List<Filme> search(String palavra) {
+		palavra = "%"+palavra+"%";
+		Query query = manager.createQuery("select filme from Filme where filme.titulo like :palavra");
+		query.setParameter("palavra", palavra);
+		return query.getResultList();
+	}  
+	  
+	  
+	  
+	  
+	
+	/*
+	
+	
+      
+      
 	
 	
 	public Filme select(Integer id){
@@ -266,6 +304,9 @@ public class JdbcFilmeDao{
 			}
 		}
 	}
+	*/
+	
+	
 	
 	
 }

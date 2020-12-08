@@ -29,7 +29,7 @@
    	</bean>
    
    
-     <!-- Gerenciador dos Recursos estáticos - mvc resources tag  -->
+     <!-- Gerenciador dos Recursos estaticos - mvc resources tag  -->
 	 <mvc:resources mapping="/resources/**" location="/resources/" />	
 	 <!-- also add the following beans to get rid of some exceptions 
 	 <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
@@ -37,14 +37,31 @@
 	 </bean> -->
    
    
-	<!-- COMPONENTE responsável por estabelecer a conexão através do JDBC -->
+	<!-- COMPONENTE responsavel por estabelecer a conexão através do JDBC -->
 	<bean id="mysqlDataSource" class="org.apache.commons.dbcp2.BasicDataSource">
 	  	<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-	  	<property name="url" value="jdbc:mysql://localhost/locadora"/>
+	  	<property name="url" value="jdbc:mysql://localhost/locadora?useSSL=false"/>
 	  	<property name="username" value="root"/>
 	  	<property name="password" value="0102301023"/>
 	</bean>
+	
+	
+	<!-- Componente JPA responsavel por gerenciar queries com BD ai inves do DAO, usa as config de conexao -->
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+	    <property name="dataSource" ref="mysqlDataSource" />
+	    <property name="jpaVendorAdapter">
+    		<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+    	</property>
+  	</bean>
 
+	
+	<!-- gerenciamento da transação pelo spring: gerencia commit, rollback das operacoes com BD -->
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+	  	<property name="entityManagerFactory" ref="entityManagerFactory"/>
+	</bean>
+  
+  
+  
    	
    	<!-- Opcional: arquivo com as mensagens de validacao para retirar dos beans das classes 
 		<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">

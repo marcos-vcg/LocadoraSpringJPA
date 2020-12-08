@@ -2,11 +2,16 @@ package controller;
 
 import java.io.IOException;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.servlet.annotation.MultipartConfig;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,28 +21,33 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import bean.Filme;
+import dao.FilmeDao;
 import dao.JdbcCategoriaDao;
 import dao.JdbcFilmeDao;
 import dao.JdbcGeneroDao;
+import dao.JpaCategoriaDao;
+import dao.JpaFilmeDao;
+import dao.JpaGeneroDao;
 
 
+@Transactional
 @MultipartConfig
 @Controller
 public class FilmesController {
 	
-	private JdbcFilmeDao filmeDao;  
-	private JdbcGeneroDao generoDao;
-	private JdbcCategoriaDao categoriaDao;
-	 
+	@Autowired
+	@Qualifier("jpaFilmeDao")
+	private FilmeDao filmeDao; 
 	
 	@Autowired
-	public FilmesController(JdbcFilmeDao filmeDao, JdbcGeneroDao generoDao, JdbcCategoriaDao categoriaDao) {
-		this.filmeDao = filmeDao; 
-		this.generoDao = generoDao;
-		this.categoriaDao = categoriaDao;
-	}
+	private JpaGeneroDao generoDao;
+	
+	@Autowired
+	private JpaCategoriaDao categoriaDao;
 	
 
+	
+	
     
     @RequestMapping(value = "filmes", method = RequestMethod.GET)
 	public String lista(Model model) {
@@ -85,6 +95,23 @@ public class FilmesController {
 			e.printStackTrace();
 		}
     	
+    	
+    		/*
+	    	// Inserir usando JPA
+    		// Não funciona pois o arquivo persistence.xml não está com as configuracoes de conexao
+	    	EntityManagerFactory factory = Persistence.createEntityManagerFactory("locadora");
+	    	EntityManager manager = factory.createEntityManager();
+	    	manager.getTransaction().begin();
+	    	manager.persist(filme);
+	    	manager.getTransaction().commit();
+	    	
+	    	manager.close();
+	    	factory.close();
+	    	*/
+    	
+    	
+    	
+    	// Inserir usando DAO
         filmeDao.insert(filme);
         return "redirect:filmes";
     }
@@ -132,7 +159,7 @@ public class FilmesController {
     
     @RequestMapping(value="deleteFilme", method=RequestMethod.GET)
     public String remove(Filme filme) {
-        filmeDao.delete(filme.getId());
+        filmeDao.delete(filme);
         return "redirect:filmes";
     }
     
