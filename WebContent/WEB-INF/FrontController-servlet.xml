@@ -1,0 +1,48 @@
+<beans xmlns = "http://www.springframework.org/schema/beans"
+   xmlns:context = "http://www.springframework.org/schema/context"
+   xmlns:mvc="http://www.springframework.org/schema/mvc"
+   xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation = "
+   http://www.springframework.org/schema/beans     
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+   http://www.springframework.org/schema/context 
+   http://www.springframework.org/schema/context/spring-context-3.0.xsd
+   http://www.springframework.org/schema/mvc
+   http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+   	<!--  mvc:annotation-driven  validator="globalValidator"/ => habilitar as @annotations do SpringMVC -->
+   	<mvc:annotation-driven/>
+  
+  
+	<!-- Declara o uso de anotações de Injeção de Dependência (Component Scan já abrange todas) 
+   	<context:annotation-config/>  -->
+   
+   	
+   	<!-- Informa o Pacote base para a verificação das annotations dos componentes do COntroller -->
+   	<context:component-scan base-package = "controller, dao, bean" />
+	
+	
+	<!-- Informa o local e extensão dos arquivos de Visualizacao ao Servlet Controller -->
+   	<bean id = "viewResolver" class = "org.springframework.web.servlet.view.InternalResourceViewResolver">
+      	<property name = "prefix" value = "/WEB-INF/views/" />
+      	<property name = "suffix" value = ".jsp" />
+   	</bean>
+   
+   
+	<!-- COMPONENTE responsável por estabelecer a conexão através do JDBC -->
+	<bean id="mysqlDataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+	  	<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+	  	<property name="url" value="jdbc:mysql://localhost/locadora"/>
+	  	<property name="username" value="root"/>
+	  	<property name="password" value="0102301023"/>
+	</bean>
+
+   	
+   	<!-- Opcional: arquivo com as mensagens de validacao para retirar dos beans das classes 
+		<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+	      	<property name="basename" value="/WEB-INF/mensagens" />
+	  	</bean>   	-->
+  	
+   
+   	<!-- bean id="validator"  class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/-->
+</beans>
