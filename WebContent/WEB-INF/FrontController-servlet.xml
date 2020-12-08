@@ -29,6 +29,14 @@
    	</bean>
    
    
+     <!-- Gerenciador dos Recursos estáticos - mvc resources tag  -->
+	 <mvc:resources mapping="/resources/**" location="/resources/" />	
+	 <!-- also add the following beans to get rid of some exceptions 
+	 <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
+	 	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+	 </bean> -->
+   
+   
 	<!-- COMPONENTE responsável por estabelecer a conexão através do JDBC -->
 	<bean id="mysqlDataSource" class="org.apache.commons.dbcp2.BasicDataSource">
 	  	<property name="driverClassName" value="com.mysql.jdbc.Driver"/>

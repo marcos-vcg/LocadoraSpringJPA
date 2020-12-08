@@ -7,6 +7,7 @@
 	<head>
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 		<meta charset="utf-8">
+		<link rel="icon" href="resources/images/favicon.png">
 		<title>Formulario de Filme</title>
 	</head>
 	
